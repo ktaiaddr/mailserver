@@ -2,7 +2,7 @@
 
 ## 環境
 ```bash
-CentOS 7.5
+CentOS Linux release 7.5.1804 (Core)
 ```
 
 ## DNS設定
@@ -12,6 +12,11 @@ CentOS 7.5
 #### 各種インストール
 ```bash
 # yum install -y cyrus-sasl dovecot postfix cyrus-sasl-plain cyrus-sasl-md5
+```
+
+#### saslauthd
+```bash
+# systemctl start saslauthd
 ```
 
 #### postfix master.cf
@@ -95,10 +100,8 @@ disable_plaintext_auth = no
 
 #### firewall-cmd
 ```bash
-firewall-cmd --add-port=587/tcp --zone=public --permanent
-firewall-cmd --reload
-firewall-cmd --add-port=25/tcp --zone=public --permanent
-firewall-cmd --reload
+firewall-cmd --permanent --add-port=587/tcp --zone=public
+firewall-cmd --permanent --add-port=25/tcp --zone=public
 firewall-cmd --permanent --add-service=pop3 --zone=public
 firewall-cmd --permanent --add-service=imap --zone=public
 firewall-cmd --reload
