@@ -100,3 +100,34 @@ firewall-cmd --permanent --add-service=imap --zone=public
 firewall-cmd --reload
 firewall-cmd --list-services
 ```
+
+
+#### SFP設定
+対象ドメインのSPFに以下のレコードを設定する
+```bash
+メールドメイン.          120     IN      TXT     "v=spf1 +ip4:IPアドレス -all"
+```
+
+#### DMARK設定
+_dmarc.対象ドメインのtxtに以下のレコードを設定する
+```bash
+_dmarc.メールドメイン.   120     IN      TXT     "v=DMARC1\; p=none\; rua=mailto:dmarc-ra@*******\; ruf=mailto:dmarc@*******"
+```
+
+#### DKIM設定
+
+dkimのインストール
+```bash
+target_mail_domain=[メールドメイン]
+yum install opendkim
+mkdir /etc/opendkim/keys/$target_mail_domain
+opendkim-genkey -D /etc/opendkim/keys/$target_mail_domain -d $target_mail_domain -s 20210808 ※←作業日時等
+chown -R opendkim:opendkim /etc/opendkim/keys/$target_mail_domain
+cat /etc/opendkim/keys/$target_mail_domain/20210808.txt
+20210808._domainkey     IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0(略)B3HZSQIDAQAB" )  ; ----- DKIM key 20210808 for [メールドメイン]
+```
+20210808._domainkey.対象ドメインのSPFに以下のレコードを設定する
+```bash
+20210808._domainkey.メールドメイン.   120     IN      TXT     "v=DKIM1; k=rsa; p=MIGfMA0(略)B3HZSQIDAQAB"
+```
