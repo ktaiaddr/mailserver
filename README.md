@@ -2,8 +2,12 @@
 
 ## 環境
 ```bash
-CentOS7.5
+CentOS 7.5
 ```
+
+## DNS設定
+- メールサーバーのAレコード、MXレコードを登録済み
+
 
 #### 各種インストール
 ```bash
@@ -130,4 +134,110 @@ cat /etc/opendkim/keys/$target_mail_domain/20210808.txt
 20210808._domainkey.対象ドメインのSPFに以下のレコードを設定する
 ```bash
 20210808._domainkey.メールドメイン.   120     IN      TXT     "v=DKIM1; k=rsa; p=MIGfMA0(略)B3HZSQIDAQAB"
+```
+
+```bash
+# vim /etc/opendkim.conf
+#Mode   v
+#sを追加
+Mode    sv
+#コメントアウト
+#KeyFile        /etc/opendkim/keys/default.private
+#コメントアウト解除
+KeyTable        /etc/opendkim/KeyTable
+#コメントアウト解除
+SigningTable    refile:/etc/opendkim/SigningTable
+コメントアウト解除
+ExternalIgnoreList      refile:/etc/opendkim/TrustedHosts
+#コメントアウト解除
+InternalHosts   refile:/etc/opendkim/TrustedHosts
+```
+
+
+```bash
+# vi /etc/opendkim/KeyTable
+#末尾に追加
+20210808._domainkey.[メールドメイン] [メールドメイン]:20210808:/etc/opendkim/keys/[メールドメイン]/20210808.private
+```
+
+```bash
+# vi /etc/opendkim/SigningTable
+#末尾に追加
+*@[メールドメイン] 20210808._domainkey.[メールドメイン]
+```
+
+opendkim 起動
+```bash
+# systemctl start opendkim
+# systemctl status opendkim
+```
+opendkim 自動起動の設定
+```bash
+# systemctl enable opendkim
+# 確認
+# systemctl is-enabled opendkim
+enabled
+```
+
+Postfixの設定追加
+```bash
+# vi /etc/postfix/main.cf
+#末尾に追加します
+### DKIM Settings
+smtpd_milters = inet:127.0.0.1:8891
+non_smtpd_milters = $smtpd_milters
+milter_default_action = accept
+```
+
+Postfixの設定確認
+"-n"オプションはデフォルトパラメーターと異なる値だけを表示
+```bash
+# postconf -n
+```
+Postfixの設定チェック
+```bash
+# postfix check
+```
+Poxtfix再起動
+```bash
+# systemctl restart postfix
+# systemctl status postfix
+```
+メール送信ログ確認
+```bash
+Aug  8 22:45:59 160-251-11-168 opendkim[31711]: A33CF12148C: DKIM-Signature field added (s=20210808, d=[メールドメイン名])
+```
+
+確認サイト
+以下のサイトで、check@naritai.jp 宛に空メールを送ると
+SPF,DKIM,DMARCの設定状況を確認して返信してもらえます
+
+https://www.naritai.jp/
+```bash
+こんにちは [メールユーザ]@[メールドメイン] さん
+
+[総評]
+設定は正しく設定されています。
+
+個別の送信ドメイン認証結果は以下の通りです。
+
+[SPF]
+接続元IPアドレス : [IPアドレス]
+認証結果は PASS でした。
+
+[DKIM]
+認証結果は pass でした。
+署名ドメインは [メールドメイン] でした。
+
+[DMARC]
+認証結果は pass でした。
+認証ドメインは [メールドメイン] でした。
+ポリシーは none でした。
+
+以上です。
+--
+なりすまし対策ポータル「ナリタイ」
+https://www.naritai.jp/
+
+
 ```
