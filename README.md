@@ -38,6 +38,8 @@ myorigin設定
 myorigin = $mydomain
 
 inet_interfaces = all
+#↓はコメントアウトする
+#inet_interfaces = localhost
 
 inet_protocols = all
 
