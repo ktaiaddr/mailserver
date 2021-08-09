@@ -8,6 +8,11 @@ CentOS Linux release 7.5.1804 (Core)
 ## DNS設定
 - メールサーバーのAレコード、MXレコードを登録済み
 
+#### ユーザ作成
+```bash
+useradd [ユーザ名]
+passwd [ユーザ名]
+```
 
 #### 各種インストール
 ```bash
