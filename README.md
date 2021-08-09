@@ -94,11 +94,28 @@ smtp_tls_security_level = may
 protocols = imap pop3 lmtp
 ```
 
+#### dovecot 10-mail.conf
+```bash
+# vim /etc/dovecot/conf.d/10-mail.conf
+
+#メールボックスの位置の指定
+mail_location = mbox:~/mail:INBOX=/var/mail/%u
+
+#メールボックスの作成で必要
+mail_access_groups=mail
+```
+
 #### dovecot 10-auth.conf
 ```bash
 vim /etc/dovecot/conf.d/10-auth.conf
 disable_plaintext_auth = no
 ```
+dovecot 起動
+```bash
+# systemctl start dovecot
+# systemctl status dovecot
+```
+
 
 #### firewall-cmd
 ```bash
