@@ -119,8 +119,11 @@ dovecot 起動
 
 #### firewall-cmd
 ```bash
-firewall-cmd --permanent --add-port=587/tcp --zone=public
-firewall-cmd --permanent --add-port=25/tcp --zone=public
+##### firewall-cmd --permanent --add-port=587/tcp --zone=public
+##### firewall-cmd --permanent --add-port=25/tcp --zone=public
+firewall-cmd --permanent --add-service=smtp --zone=public
+firewall-cmd --permanent --add-service=smtps --zone=public
+firewall-cmd --permanent --add-service=smtp-submission --zone=public
 firewall-cmd --permanent --add-service=pop3 --zone=public
 firewall-cmd --permanent --add-service=imap --zone=public
 firewall-cmd --reload
