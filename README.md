@@ -14,11 +14,6 @@ CentOS Linux release 7.5.1804 (Core)
 # yum install -y cyrus-sasl dovecot postfix cyrus-sasl-plain cyrus-sasl-md5
 ```
 
-#### saslauthd
-```bash
-# systemctl start saslauthd
-```
-
 #### postfix master.cf
 ```bash
 #vim /etc/postfix/master.cf
@@ -107,12 +102,6 @@ mail_location = maildir:~/Maildir
 vim /etc/dovecot/conf.d/10-auth.conf
 disable_plaintext_auth = no
 ```
-dovecot 起動
-```bash
-# systemctl start dovecot
-# systemctl status dovecot
-```
-
 
 #### firewall-cmd
 ```bash
@@ -225,6 +214,17 @@ Poxtfix再起動
 # systemctl restart postfix
 # systemctl status postfix
 ```
+dovecot 起動
+```bash
+# systemctl start dovecot
+# systemctl status dovecot
+```
+
+#### saslauthd
+```bash
+# systemctl start saslauthd
+```
+
 メール送信ログ確認
 ```bash
 Aug  8 22:45:59 160-251-11-168 opendkim[31711]: A33CF12148C: DKIM-Signature field added (s=20210808, d=[メールドメイン名])
