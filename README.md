@@ -95,15 +95,11 @@ protocols = imap pop3 lmtp
 ```
 
 #### dovecot 10-mail.conf
-↓を設定するとうまく受信できなかったのでとりあえず設定しない
 ```bash
 # vim /etc/dovecot/conf.d/10-mail.conf
 
 #メールボックスの位置の指定
-mail_location = mbox:~/mail:INBOX=/var/mail/%u
-
-#メールボックスの作成で必要
-mail_access_groups=mail
+mail_location = maildir:~/Maildir
 ```
 
 #### dovecot 10-auth.conf
