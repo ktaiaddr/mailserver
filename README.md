@@ -95,6 +95,7 @@ protocols = imap pop3 lmtp
 ```
 
 #### dovecot 10-mail.conf
+↓を設定するとうまく受信できなかったのでとりあえず設定しない
 ```bash
 # vim /etc/dovecot/conf.d/10-mail.conf
 
